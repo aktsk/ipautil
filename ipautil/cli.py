@@ -15,6 +15,7 @@ def cmd_decode(args):
     try:
         if util.decode(args.ipa_path):
             print(Fore.CYAN + 'Output: ./Payload')
+
     except:
         return
 

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # coding: UTF-8
 
-import datetime
 import glob
 import json
 import os
+import plistlib
 import shutil
 import subprocess
 from colorama import Fore
@@ -36,6 +36,10 @@ def decode(ipa_path):
     except FileNotFoundError as e:
         print('unzip not found.')
     
+    print('Checking AppTransportSecurity...')
+    app_path = glob.glob(os.path.join('./Payload', '**.app'))[0]
+    check_ATS(os.path.join(app_path, 'Info.plist'))
+
     return True
 
 
@@ -144,3 +148,27 @@ def run_codesign(target_path, signature_string, entitlements_plist_path):
     proc = subprocess.Popen(codesign_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     outs, errs = proc.communicate()
     return outs, errs
+
+
+def check_ATS(info_plist_path):
+    with open(info_plist_path, 'rb') as fp:
+        pl = plistlib.load(fp)
+        try:
+            if pl['NSAppTransportSecurity']['NSAllowsArbitraryLoads']:
+                print(Fore.RED + 'True\n')
+                print('NSExceptionDomains:')
+                try:
+                    domains = pl['NSAppTransportSecurity']['NSExceptionDomains']
+                    for d in domains:
+                        print(Fore.RED + d)
+
+                except KeyError as e:
+                    print('None')
+
+                print('')
+            else:
+                print(Fore.BLUE + 'False\n')
+
+        except KeyError as e:
+            print(Fore.BLUE + 'False\n')
+    
