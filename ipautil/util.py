@@ -38,14 +38,13 @@ def decode(ipa_path):
     except FileNotFoundError as e:
         print('unzip not found.')
     
-    print('Checking AppTransportSecurity...')
     app_path = glob.glob(os.path.join('./Payload', '**.app'))[0]
     info_plist_path = os.path.join(app_path, 'Info.plist')
     with open(info_plist_path, 'rb') as fp:
         pl = plistlib.load(fp)
+        plistutil.get_package_name(pl)
         plistutil.check_ATS(pl)
         plistutil.check_custom_schemas(pl)
-
 
     return True
 

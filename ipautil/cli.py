@@ -5,9 +5,11 @@ import argparse
 import colorama
 import glob
 import os
+import plistlib
 
 from colorama import Fore, Back, Style
 from . import util
+from . import plistutil
 
 
 def cmd_decode(args):
@@ -16,8 +18,9 @@ def cmd_decode(args):
         if util.decode(args.ipa_path):
             print(Fore.CYAN + 'Output: ./Payload')
 
-    except:
-        return
+    except Exception as e:
+        print(e)
+        print(Fore.RED + 'Failed')
 
 
 def cmd_build(args):
@@ -25,7 +28,9 @@ def cmd_build(args):
     try:
         if util.sign(args.payload_dir):
             print(Fore.CYAN + 'Signed\n')
-    except:
+    except Exception as e:
+        print(e)
+        print(Fore.RED + 'Failed')
         return
 
     print('Building IPA...')
@@ -35,10 +40,10 @@ def cmd_build(args):
         ipa_path = app_path.split('/')[-1].replace(' ', '_') + ".patched.ipa"
     try:
         util.build(args.payload_dir, ipa_path)
+        print(Fore.CYAN + 'Output: ' + ipa_path)
     except Exception as e:
-        return
-
-    print(Fore.CYAN + 'Output: ' + ipa_path)
+        print(e)
+        print(Fore.RED + 'Failed')
 
 
 def cmd_sign(args):
@@ -46,8 +51,22 @@ def cmd_sign(args):
     try:
         if util.sign(args.payload_dir):
             print(Fore.CYAN + 'Signed')
-    except:
-        return
+    except Exception as e:
+        print(e)
+        print(Fore.RED + 'Failed')
+
+
+def cmd_info(args):
+    print('Checking Info.plist...')
+    try:
+        with open(args.info_plist_path, 'rb') as fp:
+            pl = plistlib.load(fp)
+            plistutil.get_package_name(pl)
+            plistutil.check_ATS(pl)
+            plistutil.check_custom_schemas(pl)
+    except Exception as e:
+        print(e)
+        print(Fore.RED + 'Failed')
 
 
 def main():
@@ -67,6 +86,10 @@ def main():
     parser_sign = subparsers.add_parser('sign', aliases=['s'], help='')
     parser_sign.add_argument('payload_dir', help='')
     parser_sign.set_defaults(handler=cmd_sign)
+
+    parser_info = subparsers.add_parser('info', aliases=['i'], help='')
+    parser_info.add_argument('info_plist_path', help='')
+    parser_info.set_defaults(handler=cmd_info)
 
     args = parser.parse_args()
     if hasattr(args, 'handler'):
