@@ -7,9 +7,9 @@ import glob
 import os
 import plistlib
 
-from colorama import Fore, Back, Style
 from . import util
 from . import plistutil
+from colorama import Fore, Back, Style
 
 
 def cmd_decode(args):
@@ -59,11 +59,11 @@ def cmd_sign(args):
 def cmd_info(args):
     print('Checking Info.plist...')
     try:
-        with open(args.info_plist_path, 'rb') as fp:
-            pl = plistlib.load(fp)
-            plistutil.get_package_name(pl)
-            plistutil.check_ATS(pl)
-            plistutil.check_custom_schemas(pl)
+        app_path = glob.glob(os.path.join('./Payload', '**.app'))[0]
+        info_plist_path = os.path.join(app_path, 'Info.plist')
+        info_plist_util = plistutil.InfoPlistUtil(info_plist_path)
+        info_plist_util.check_all()
+
     except Exception as e:
         print(e)
         print(Fore.RED + 'Failed')
