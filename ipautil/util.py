@@ -157,18 +157,17 @@ def run_codesign(target_path, signature_string, entitlements_plist_path):
 
 
 def check_sensitive_files(target_path):
-    types = ('**/*.md', '**/*.cpp', '**/*.c', '**/*.h', '**/*.mm', 
-        '**/*.swift', '**/*.sh', '**/*.template', '**/*.json', '**/*.yml', '**/*.txt') # the tuple of file types
+    types = ('**/*.md', '**/*.cpp', '**/*.c', '**/*.h', '**/*.mm', '**/*.swift', 
+        '**/*.sh', '**/*.bat', '**/*.template', '**/*.json', '**/*.yml', '**/*.txt')
     found_files = []
     for file_type in types:
         found_files.extend(glob.glob(os.path.join(target_path, file_type), recursive=True))
     
     print('Potentially Sensitive Files:')
     if len(found_files) == 0:
-        print(Fore.CYAN + 'None')
+        print(Fore.BLUE + 'None')
     else:
         for sensitive_file in found_files:
             print(Fore.RED + sensitive_file)
     print('')
     return found_files
-    
