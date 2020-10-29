@@ -5,6 +5,7 @@
 `ipautil` is a useful utility for mobile security testing.
 It is a wrapper for `codesign` commands.
 I've only checked it works on macOS.
+Android version is [here](https://github.com/aktsk/apkutil).
 
 ## Installation
 Since `ipautil` is implemented in Python, it can be installed with the pip command, which is a Python package management system.
@@ -89,6 +90,10 @@ facebook.com
 
 Custom schemas (CFBundleURLSchemes):
 None
+
+Potentially Sensitive Files:
+./Payload/demo-client iOS develop.app/README.md
+./Payload/demo-client iOS develop.app/hoge.sh
 
 Output: ./Payload
 ```
