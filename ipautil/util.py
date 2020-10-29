@@ -44,6 +44,7 @@ def decode(ipa_path):
     info_plist_path = os.path.join(app_path, 'Info.plist')
     info_plist_util = plistutil.InfoPlistUtil(info_plist_path)
     info_plist_util.check_all()
+    check_sensitive_files('./Payload')
 
     return True
 
@@ -153,4 +154,21 @@ def run_codesign(target_path, signature_string, entitlements_plist_path):
     proc = subprocess.Popen(codesign_cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     outs, errs = proc.communicate()
     return outs, errs
+
+
+def check_sensitive_files(target_path):
+    types = ('**/*.md', '**/*.cpp', '**/*.c', '**/*.h', '**/*.mm', 
+        '**/*.swift', '**/*.sh', '**/*.template', '**/*.json', '**/*.yml', '**/*.txt') # the tuple of file types
+    found_files = []
+    for file_type in types:
+        found_files.extend(glob.glob(os.path.join(target_path, file_type), recursive=True))
+    
+    print('Potentially Sensitive Files:')
+    if len(found_files) == 0:
+        print(Fore.CYAN + 'None')
+    else:
+        for sensitive_file in found_files:
+            print(Fore.RED + sensitive_file)
+    print('')
+    return found_files
     
