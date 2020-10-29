@@ -3,6 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/aktsk/ipautil/blob/master/LICENSE)
 
 `ipautil` is a useful utility for mobile security testing.
+This tool makes it easy to resign the IPA, check for potentially sensitive files and `Info.plist` in the IPA.
+
 It is a wrapper for `codesign` commands.
 I've only checked it works on macOS.
 Android version is [here](https://github.com/aktsk/apkutil).
@@ -63,6 +65,7 @@ None
 
 ### decode
 `decode` subcommand make the IPA decode.
+When unzipping the IPA, check for potentially sensitive files and check the Info.plist.
 
 ```
 $ ipautil decode sample.ipa
