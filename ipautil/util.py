@@ -159,15 +159,26 @@ def run_codesign(target_path, signature_string, entitlements_plist_path):
 def check_sensitive_files(target_path):
     types = ('**/*.md', '**/*.cpp', '**/*.c', '**/*.h', '**/*.mm', '**/*.swift', 
         '**/*.sh', '**/*.bat', '**/*.template', '**/*.json', '**/*.yml', '**/*.txt')
+    allow_list = ('/Data/Raw/google-services-desktop.json', '/Data/RuntimeInitializeOnLoads.json',
+        '/Data/ScriptingAssemblies.json')
     found_files = []
     for file_type in types:
         found_files.extend(glob.glob(os.path.join(target_path, file_type), recursive=True))
     
-    print('Potentially Sensitive Files:')
-    if len(found_files) == 0:
+    sensitive_files = []
+    for found_file in found_files:
+        allow_flag = False
+        for allow_file in allow_list:
+            if found_file.endswith(allow_file):
+                allow_flag = True
+                break
+        if not allow_flag:
+            sensitive_files.append(found_file)
+
+    if len(sensitive_files) == 0:
         print(Fore.BLUE + 'None')
     else:
-        for sensitive_file in found_files:
+        for sensitive_file in sensitive_files:
             print(Fore.RED + sensitive_file)
     print('')
-    return found_files
+    return sensitive_files

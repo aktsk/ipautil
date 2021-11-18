@@ -5,7 +5,7 @@ from setuptools import setup
 
 setup(
     name="ipautil",
-    version="0.1.1",
+    version="0.1.2",
     description="decode, resign, etc",
     author="Taichi Kotake",
     packages=['ipautil'],

@@ -71,7 +71,7 @@ def cmd_info(args):
 
 def main():
     colorama.init(autoreset=True)
-    parser = argparse.ArgumentParser(description='ipa patcher')
+    parser = argparse.ArgumentParser(description='useful utility for iOS security testing')
     subparsers = parser.add_subparsers()
 
     parser_decode = subparsers.add_parser('decode', aliases=['d'], help='')
