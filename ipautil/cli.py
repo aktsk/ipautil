@@ -69,10 +69,49 @@ def cmd_info(args):
         print(Fore.RED + 'Failed')
 
 
+def cmd_all(args):
+    print('Decoding IPA...')
+    try:
+        if util.decode(args.ipa_path):
+            print(Fore.CYAN + 'Output: ./Payload\n')
+    except Exception as e:
+        print(e)
+        print(Fore.RED + 'Failed')
+        return
+
+    print('Signing IPA by codesign...')
+    dir_path = os.path.dirname(args.ipa_path)
+    payload_dir = os.path.join(dir_path, 'Payload')
+    try:
+        if util.sign(payload_dir):
+            print(Fore.CYAN + 'Signed\n')
+    except Exception as e:
+        print(e)
+        print(Fore.RED + 'Failed')
+        return
+
+    print('Building IPA...')
+    output_ipa_path = args.output
+    if args.output is None:
+        app_path = glob.glob(os.path.join(payload_dir, '**.app'))[0]
+        output_ipa_path = args.ipa_path.split('/')[-1].replace(' ', '_').replace('.ipa', '') + ".patched.ipa"
+    try:
+        util.build(payload_dir, output_ipa_path)
+        print(Fore.CYAN + 'Output: ' + output_ipa_path)
+    except Exception as e:
+        print(e)
+        print(Fore.RED + 'Failed')
+
+
 def main():
     colorama.init(autoreset=True)
     parser = argparse.ArgumentParser(description='useful utility for iOS security testing')
     subparsers = parser.add_subparsers()
+
+    parser_all = subparsers.add_parser('all', aliases=['a'], help='check Info.plist, decode & re-sign APK')
+    parser_all.add_argument('ipa_path', help='')
+    parser_all.add_argument('--output', '-o')
+    parser_all.set_defaults(handler=cmd_all)
 
     parser_decode = subparsers.add_parser('decode', aliases=['d'], help='')
     parser_decode.add_argument('ipa_path', help='')

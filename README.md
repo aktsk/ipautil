@@ -36,10 +36,11 @@ Most of the subcommands are assigned with alias.
 
 |subcommand  |alias  |desc  |
 |---|---|---|
+|`all` | `a` | check Info.plist, decode & re-sign APK |
 |`info` | `i` | check Info.plist |
 |`decode` | `d` | decode IPA |
 |`build`  | `b` | build IPA |
-|`sign` | `s` | sign IPA |
+|`sign` | `s` | re-sign IPA |
 
 ### info
 `info` subcommand allows you to see some information by parsing Info.plist.
