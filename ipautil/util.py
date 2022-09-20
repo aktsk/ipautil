@@ -102,22 +102,15 @@ def sign(payload_path):
         app_path = glob.glob(os.path.join(payload_path, '**.app'))[0]        
         shutil.copyfile(embedded_mobileprovision_path, os.path.join(app_path, 'embedded.mobileprovision'))
         
-        for framework_file in glob.glob(os.path.join(app_path, 'Frameworks/*')):
-            outs, errs = run_codesign(framework_file, signature_string, entitlements_plist_path)
-            if (outs is not None) and (len(outs) != 0):
-                print(outs.decode('ascii'), end='')
-            
-            if (errs is not None) and (len(errs) != 0):
-                print(errs.decode('ascii'), end='')
+        for file_in_app in glob.glob(os.path.join(app_path, '**/*'), recursive=True):
+            if os.path.isfile(file_in_app):
+                outs, errs = run_codesign(file_in_app, signature_string, entitlements_plist_path)
+                if (outs is not None) and (len(outs) != 0):
+                    print(outs.decode('ascii'), end='')
 
-        for plugin_file in glob.glob(os.path.join(app_path, 'PlugIns/*')):
-            outs, errs = run_codesign(plugin_file, signature_string, entitlements_plist_path)
-            if (outs is not None) and (len(outs) != 0):
-                print(outs.decode('ascii'))
-            
-            if (errs is not None) and (len(errs) != 0):
-                print(errs.decode('ascii'))
-        
+                if (errs is not None) and (len(errs) != 0):
+                    print(errs.decode('ascii'), end='')
+   
         outs, errs = run_codesign(app_path, signature_string, entitlements_plist_path)
         if (outs is not None) and (len(outs) != 0):
             print(outs.decode('ascii'), end='')
