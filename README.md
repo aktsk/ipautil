@@ -1,19 +1,19 @@
 # ipautil
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/aktsk/ipautil/blob/master/LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/sterrasec/ipautil/blob/master/LICENSE)
 
 `ipautil` is a useful utility for mobile security testing.
 This tool makes it easy to resign the IPA, check for potentially sensitive files and `Info.plist` in the IPA.
 
 It is a wrapper for `codesign` commands.
 I've only checked it works on macOS.
-Android version is [here](https://github.com/aktsk/apkutil).
+Android version is [here](https://github.com/sterrasec/apkutil).
 
 ## Installation
 Since `ipautil` is implemented in Python, it can be installed with the pip command, which is a Python package management system.
 
 ```
-$ pip install git+ssh://git@github.com/aktsk/ipautil.git
+$ pip install git+ssh://git@github.com/sterrasec/ipautil.git
 ```
 
 Also, place `~/ipautil.json` containing the sign information necessary for signing IPA in your home directory.
